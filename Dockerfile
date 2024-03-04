@@ -4,11 +4,12 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 ARG BUILD_DATE
 ARG VERSION
 ARG ORCASLICER_VERSION
+ARG CURA_VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
 # title
-ENV TITLE=OrcalSlicer \
+ENV TITLE=WebSlicer \
     SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 RUN \
@@ -50,6 +51,20 @@ RUN \
   chmod +x /tmp/orca.app && \
   ./orca.app --appimage-extract && \
   mv squashfs-root /opt/orcaslicer && \
+  echo "**** install cura from appimage ****" && \
+  if [ -z ${CURA_VERSION+x} ]; then \
+    CURA_VERSION=$(curl -sX GET "https://api.github.com/repos/Ultimaker/Cura/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
+  fi && \
+  cd /tmp && \
+  curl -o \
+    /tmp/cura.app -L \
+    "https://github.com/Ultimaker/Cura/releases/download/${CURA_VERSION}/UltiMaker-Cura-${CURA_VERSION}-linux-X64.AppImage" && \
+  chmod +x /tmp/cura.app && \
+  ./cura.app --appimage-extract && \
+  mv squashfs-root /opt/cura && \
+  sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/cura/AppRun.env && \
+  sed -i 's|</applications>|  <application title="UltiMaker Cura" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
