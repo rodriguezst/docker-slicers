@@ -66,7 +66,6 @@ RUN \
   ./cura.app --appimage-extract && \
   mv squashfs-root /opt/cura && \
   sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/cura/AppRun.env && \
-  sed -i 's|</applications>|  <application title="UltiMaker Cura" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
   echo "**** install crealityprint from appimage ****" && \
   cd /tmp && \
   curl -o \
@@ -76,7 +75,6 @@ RUN \
   ./crealityprint.app --appimage-extract && \
   mv squashfs-root /opt/crealityprint && \
   sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/crealityprint/AppRun.env && \
-  sed -i 's|</applications>|  <application title="Creality Print" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
