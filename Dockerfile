@@ -5,6 +5,8 @@ ARG BUILD_DATE
 ARG VERSION
 ARG ORCASLICER_VERSION
 ARG CURA_VERSION
+ARG CREALITYPRINT_VERSION=v4.3.8
+ARG CREALITYPRINT_BUILD=6991
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
@@ -64,7 +66,15 @@ RUN \
   ./cura.app --appimage-extract && \
   mv squashfs-root /opt/cura && \
   sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/cura/AppRun.env && \
-  sed -i 's|</applications>|  <application title="UltiMaker Cura" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
+  echo "**** install crealityprint from appimage ****" && \
+  cd /tmp && \
+  curl -o \
+    /tmp/crealityprint.app -L \
+    "https://github.com/CrealityOfficial/CrealityPrint/releases/download/${CREALITYPRINT_VERSION}/Creality_Print-${CREALITYPRINT_VERSION}.${CREALITYPRINT_BUILD}-x86_64-Release.AppImage" && \
+  chmod +x /tmp/crealityprint.app && \
+  ./crealityprint.app --appimage-extract && \
+  mv squashfs-root /opt/crealityprint && \
+  sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/crealityprint/AppRun.env && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
