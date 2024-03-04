@@ -5,5 +5,6 @@
 <item label="FireFox" icon="/usr/share/icons/hicolor/48x48/apps/firefox-esr.png"><action name="Execute"><command>/usr/bin/firefox</command></action></item>
 <item label="OrcaSlicer" icon="/opt/orcaslicer/OrcaSlicer.png"><action name="Execute"><command>/opt/orcaslicer/AppRun</command></action></item>
 <item label="Cura" icon="/opt/cura/cura-icon.png"><action name="Execute"><command>/opt/cura/AppRun</command></action></item>
+<item label="Creality Print" icon="/opt/crealityprint/default.png"><action name="Execute"><command>/opt/crealityprint/AppRun</command></action></item>
 </menu>
 </openbox_menu>
