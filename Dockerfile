@@ -35,10 +35,6 @@ RUN echo "**** installing nomachine dependencies ****" && \
   echo "${USER}:${PASSWORD}" | chpasswd && \
   chmod +x /nxserver.sh && \
   /etc/init.d/dbus start && \
-  echo "**** add icon ****" && \
-  curl -o \
-    /kclient/public/icon.png \
-    https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/orcaslicer-logo.png && \
   echo "**** install packages ****" && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
