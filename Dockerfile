@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
+FROM ghcr.io/linuxserver/baseimage-debian:bookworm
 
 # set version label
 ARG BUILD_DATE
@@ -12,9 +12,28 @@ LABEL maintainer="thelamer"
 
 # title
 ENV TITLE=WebSlicer \
-    SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+    SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+    DEBIAN_FRONTEND=noninteractive \
+    USER=nomachine \
+    PASSWORD=nomachine \
+    DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 
-RUN \
+RUN apt-get update && apt-get install -y apt-utils vim xterm cups curl \
+    mate-desktop-environment-core ssh pulseaudio && \
+    service ssh start && \
+    mkdir -p /var/run/dbus && \
+    curl -fSL "https://www.nomachine.com/free/linux/64/deb" -o nomachine.deb && \
+    dpkg -i nomachine.deb && \
+    groupadd -r ${USER} -g 433 && \
+    useradd -u 431 -r -g ${USER} -d /home/${USER} -s /bin/bash ${USER} && \
+    mkdir /home/${USER} && \
+    chown -R ${USER}:${USER} /home/${USER} && \
+    echo "${USER}:${PASSWORD}" | chpasswd 
+
+ADD nxserver.sh /
+ENTRYPOINT ["/nxserver.sh"]
+
+RUN /etc/init.d/dbus start && \
   echo "**** add icon ****" && \
   curl -o \
     /kclient/public/icon.png \
@@ -86,6 +105,6 @@ RUN \
 # add local files
 COPY /root /
 
-# ports and volumes
-EXPOSE 3000
+# ports and volumes (ssh, nomachine & web)
+EXPOSE 22 4000 4443
 VOLUME /config
