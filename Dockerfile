@@ -74,7 +74,6 @@ RUN \
   chmod +x /tmp/crealityprint.app && \
   ./crealityprint.app --appimage-extract && \
   mv squashfs-root /opt/crealityprint && \
-  sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/crealityprint/AppRun.env && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
