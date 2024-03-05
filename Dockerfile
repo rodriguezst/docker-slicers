@@ -10,17 +10,14 @@ ARG CREALITYPRINT_BUILD=6991
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
-# title
-ENV TITLE=WebSlicer \
-    SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+# env
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
     DEBIAN_FRONTEND=noninteractive \
-    USER=nomachine \
-    PASSWORD=nomachine \
     DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 
 RUN echo "**** installing nomachine dependencies ****" && \
   apt-get update && apt-get install -y apt-utils vim xterm cups curl \
-  mate-desktop-environment-core ssh pulseaudio && \
+  mate-desktop-environment-core ssh pulseaudio sudo && \
   service ssh start && \
   mkdir -p /var/run/dbus && \
   echo "**** installing nomachine ****" && \
@@ -89,8 +86,6 @@ RUN echo "**** installing nomachine dependencies ****" && \
     /var/lib/apt/lists/* \
     /var/tmp/* \
     /tmp/*
-
-ENTRYPOINT ["/nxserver.sh"]
 
 # add local files
 COPY /root /
