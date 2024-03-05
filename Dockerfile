@@ -90,6 +90,8 @@ RUN echo "**** installing nomachine dependencies ****" && \
     /var/tmp/* \
     /tmp/*
 
+ENTRYPOINT ["/nxserver.sh"]
+
 # add local files
 COPY /root /
 
