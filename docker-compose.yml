@@ -1,0 +1,20 @@
+---
+services:
+  slicers:
+    image: ghcr.io/rodriguezst/docker-slicers:dev
+    container_name: slicers
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - LC_ALL=es_es.UTF-8
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - ./config:/config
+    devices:
+      - "/dev/dri:/dev/dri"
+    ports:
+      - 4000:4000 # nomachine
+      - 4443:4443 # web
+    restart: unless-stopped
