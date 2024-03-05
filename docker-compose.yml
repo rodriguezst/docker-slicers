@@ -6,6 +6,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - SUDO_PASSWORD=abc
       - TZ=Europe/Madrid
       - LC_ALL=es_es.UTF-8
     cap_add:

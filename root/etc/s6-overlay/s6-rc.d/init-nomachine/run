@@ -1,2 +1,22 @@
 #!/bin/sh
+
+# set user password
+if [ -n "${SUDO_PASSWORD}" ] || [ -n "${SUDO_PASSWORD_HASH}" ]; then
+    echo "setting up sudo access"
+    if ! grep -q 'abc' /etc/sudoers; then
+        echo "adding abc to sudoers"
+        echo "abc ALL=(ALL:ALL) ALL" >> /etc/sudoers
+    fi
+    if [ -n "${SUDO_PASSWORD_HASH}" ]; then
+        echo "setting sudo password using sudo password hash"
+        sed -i "s|^abc:\!:|abc:${SUDO_PASSWORD_HASH}:|" /etc/shadow
+    else
+        echo "setting sudo password using SUDO_PASSWORD env var"
+        echo -e "${SUDO_PASSWORD}\n${SUDO_PASSWORD}" | passwd abc
+    fi
+fi
+
+# set user shell (needed by nomachine)
+chsh -s /bin/bash abc
+
 dbus-launch && /etc/NX/nxserver --startup
