@@ -21,7 +21,7 @@ RUN echo "**** installing nomachine dependencies ****" && \
   service ssh start && \
   mkdir -p /var/run/dbus && \
   echo "**** installing nomachine ****" && \
-  curl -fSL "https://download.nomachine.com/packages/8.11-PRODUCTION/Linux/nomachine-enterprise-desktop_8.11.3_4_amd64.deb" -o nomachine.deb && \r
+  curl -fSL "https://download.nomachine.com/packages/8.11-PRODUCTION/Linux/nomachine-enterprise-desktop_8.11.3_4_amd64.deb" -o nomachine.deb && \
   dpkg -i nomachine.deb && \
   echo "**** install packages ****" && \
   apt-get update && \
