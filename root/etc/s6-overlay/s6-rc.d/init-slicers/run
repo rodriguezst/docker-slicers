@@ -27,7 +27,7 @@ if [ ! -d "/opt/cura" ] && [ "${INSTALL_CURA}" -eq 1 ]; then
   fi
 fi
 
-if [ ! -d "/opt/orca" ] && [ "${INSTALL_ORCA}" -eq 1 ]; then
+if [ ! -d "/opt/orcaslicer" ] && [ "${INSTALL_ORCA}" -eq 1 ]; then
   echo "**** install oracaslicer from appimage ****" && \
   if [ -z ${ORCASLICER_VERSION+x} ]; then \
     ORCASLICER_VERSION=$(curl -sX GET "https://api.github.com/repos/SoftFever/OrcaSlicer/releases/latest" \
