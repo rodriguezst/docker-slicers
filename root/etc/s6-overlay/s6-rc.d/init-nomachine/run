@@ -1,22 +1,27 @@
 #!/usr/bin/with-contenv bash
 
-# set user password
-if [ -n "${SUDO_PASSWORD}" ] || [ -n "${SUDO_PASSWORD_HASH}" ]; then
-    echo "setting up sudo access"
-    if ! grep -q 'abc' /etc/sudoers; then
-        echo "adding abc to sudoers"
-        echo "abc ALL=(ALL:ALL) ALL" >> /etc/sudoers
+if [ ! -d "/etc/NX" ]; then
+    echo "**** NoMachine installation not detected ****"
+    echo "**** installing nomachine ****"
+    curl -fSL "https://download.nomachine.com/packages/8.11-PRODUCTION/Linux/nomachine-enterprise-desktop_8.11.3_4_amd64.deb" -o /tmp/nomachine.deb && \
+    dpkg -i /tmp/nomachine.deb
+    # set user password
+    if [ -n "${SUDO_PASSWORD}" ] || [ -n "${SUDO_PASSWORD_HASH}" ]; then
+        echo "**** setting up sudo access ****"
+        if ! grep -q 'abc' /etc/sudoers; then
+            echo "**** adding abc to sudoers ****"
+            echo "abc ALL=(ALL:ALL) ALL" >> /etc/sudoers
+        fi
+        if [ -n "${SUDO_PASSWORD_HASH}" ]; then
+            echo "**** setting sudo password using sudo password hash ****"
+            sed -i "s|^abc:\!:|abc:${SUDO_PASSWORD_HASH}:|" /etc/shadow
+        else
+            echo "**** setting sudo password using SUDO_PASSWORD env var ****"
+            echo -e "${SUDO_PASSWORD}\n${SUDO_PASSWORD}" | passwd abc
+        fi
     fi
-    if [ -n "${SUDO_PASSWORD_HASH}" ]; then
-        echo "setting sudo password using sudo password hash"
-        sed -i "s|^abc:\!:|abc:${SUDO_PASSWORD_HASH}:|" /etc/shadow
-    else
-        echo "setting sudo password using SUDO_PASSWORD env var"
-        echo -e "${SUDO_PASSWORD}\n${SUDO_PASSWORD}" | passwd abc
-    fi
+    # set user shell (needed by nomachine)
+    chsh -s /bin/bash abc
 fi
-
-# set user shell (needed by nomachine)
-chsh -s /bin/bash abc
 
 dbus-launch && /etc/NX/nxserver --startup
