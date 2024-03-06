@@ -3,8 +3,6 @@
 INSTALL_CURA="${INSTALL_CURA:-1}"
 INSTALL_ORCA="${INSTALL_ORCA:-1}"
 INSTALL_CREALITY="${INSTALL_CREALITY:-1}"
-CREALITY_VERSION="${CREALITY_VERSION:-v4.3.8}"
-CREALITY_BUILD="${CREALITY_BUILD:-6991}"
 
 if [ ! -d "/opt/cura" ] && [ "${INSTALL_CURA}" -eq 1 ]; then
   echo "**** install cura from appimage ****" && \
@@ -42,9 +40,15 @@ fi
 if [ ! -d "/opt/crealityprint" ] && [ "${INSTALL_CREALITY}" -eq 1 ]; then
   echo "**** install crealityprint from appimage ****" && \
   cd /tmp && \
+  CREALITY_TAG="latest"; \
+  if [ ! -z ${CREALITY_VERSION+x} ]; then \
+    CREALITY_TAG="tags/v${CREALITY_VERSION}"; \
+  fi && \
+  CREALITY_URL=$(curl -sX GET "https://api.github.com/repos/CrealityOfficial/CrealityPrint/releases/${CREALITY_TAG}" \
+    | grep x86_64-Release.AppImage | awk '/browser_download_url/{print $4;exit}' FS='[""]'); \
   curl -o \
     /tmp/crealityprint.app -L \
-    "https://github.com/CrealityOfficial/CrealityPrint/releases/download/${CREALITY_VERSION}/Creality_Print-${CREALITY_VERSION}.${CREALITY_BUILD}-x86_64-Release.AppImage" && \
+    "${CREALITY_URL}" && \
   chmod +x /tmp/crealityprint.app && \
   ./crealityprint.app --appimage-extract && \
   mv squashfs-root /opt/crealityprint && \

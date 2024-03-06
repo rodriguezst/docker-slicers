@@ -9,5 +9,4 @@
 | INSTALL_CREALITY | Set this to 0 to skip Creality Print slicer installation |
 | ORCASLICER_VERSION | Specific Orca slicer version to install (last release if unset) |
 | CURA_VERSION | Specific Cura slicer version to install (last release if unset) |
-| CREALITY_VERSION | Specific Creality Print slicer version to install (hardcoded version if unset) |
-| CREALITY_BUILD | Specific Creality Print slicer build to install (hardcoded build if unset) |
+| CREALITY_VERSION | Specific Creality Print slicer version to install (last release if unset) |
