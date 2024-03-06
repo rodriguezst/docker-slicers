@@ -4,7 +4,8 @@ if [ ! -d "/etc/NX" ]; then
     echo "**** NoMachine installation not detected ****"
     echo "**** installing nomachine ****"
     curl -fSL "https://download.nomachine.com/packages/8.11-PRODUCTION/Linux/nomachine-enterprise-desktop_8.11.3_4_amd64.deb" -o /tmp/nomachine.deb && \
-    dpkg -i /tmp/nomachine.deb
+    dpkg -i /tmp/nomachine.deb && \
+    sed -i 's/^DefaultDesktopCommand/DefaultDesktopCommand "\/usr\/bin\/openbox-session"\n#&/' /usr/NX/etc/node.cfg
     # set user password
     if [ -n "${SUDO_PASSWORD}" ] || [ -n "${SUDO_PASSWORD_HASH}" ]; then
         echo "**** setting up sudo access ****"

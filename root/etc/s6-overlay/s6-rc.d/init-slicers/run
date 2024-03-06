@@ -18,7 +18,13 @@ if [ ! -d "/opt/cura" ] && [ "${INSTALL_CURA}" -eq 1 ]; then
   ./cura.app --appimage-extract && \
   mv squashfs-root /opt/cura && \
   sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/cura/AppRun.env && \
-  rm -rf /tmp/cura
+  rm -rf /tmp/cura && \
+  sed -i 's/^<\/menu>/<item label="Cura Slicer" icon=“\/opt\/cura\/cura-icon.png"><action name="Execute"><command>\/opt\/cura\/AppRun<\/command><\/action><\/item>\n&/' \
+    /etc/xdg/openbox/menu.xml && \
+  if [ -f "/config/. config/openbox/menu.xml" ]; then
+    sed -i 's/^<\/menu>/<item label="Cura Slicer" icon=“\/opt\/cura\/cura-icon.png"><action name="Execute"><command>\/opt\/cura\/AppRun<\/command><\/action><\/item>\n&/' \
+    /config/. config/openbox/menu.xml
+  fi
 fi
 
 if [ ! -d "/opt/orca" ] && [ "${INSTALL_ORCA}" -eq 1 ]; then
@@ -34,7 +40,13 @@ if [ ! -d "/opt/orca" ] && [ "${INSTALL_ORCA}" -eq 1 ]; then
   chmod +x /tmp/orca.app && \
   ./orca.app --appimage-extract && \
   mv squashfs-root /opt/orcaslicer && \
-  rm -rf /tmp/orca
+  rm -rf /tmp/orca && \
+  sed -i 's/^<\/menu>/<item label="Orca Slicer" icon=“\/opt\/orcaslicer\/OrcaSlicer.png"><action name="Execute"><command>\/opt\/orcaslicer\/AppRun<\/command><\/action><\/item>\n&/' \
+    /etc/xdg/openbox/menu.xml && \
+  if [ -f "/config/. config/openbox/menu.xml" ]; then
+    sed -i 's/^<\/menu>/<item label="Orca Slicer" icon=“\/opt\/orcaslicer\/OrcaSlicer.png"><action name="Execute"><command>\/opt\/orcaslicer\/AppRun<\/command><\/action><\/item>\n&/' \
+    /config/. config/openbox/menu.xml
+  fi
 fi
 
 if [ ! -d "/opt/crealityprint" ] && [ "${INSTALL_CREALITY}" -eq 1 ]; then
@@ -52,5 +64,11 @@ if [ ! -d "/opt/crealityprint" ] && [ "${INSTALL_CREALITY}" -eq 1 ]; then
   chmod +x /tmp/crealityprint.app && \
   ./crealityprint.app --appimage-extract && \
   mv squashfs-root /opt/crealityprint && \
-  rm -rf /tmp/crealityprint
+  rm -rf /tmp/crealityprint && \
+  sed -i 's/^<\/menu>/<item label="Creality Print" icon=“\/opt\/crealityprint\/default.png"><action name="Execute"><command>\/opt\/crealityprint\/AppRun<\/command><\/action><\/item>\n&/' \
+    /etc/xdg/openbox/menu.xml && \
+  if [ -f "/config/. config/openbox/menu.xml" ]; then
+    sed -i 's/^<\/menu>/<item label="Creality Print" icon=“\/opt\/crealityprint\/default.png"><action name="Execute"><command>\/opt\/crealityprint\/AppRun<\/command><\/action><\/item>\n&/' \
+    /config/. config/openbox/menu.xml
+  fi
 fi
