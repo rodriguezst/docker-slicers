@@ -1,0 +1,52 @@
+#!/usr/bin/with-contenv bash
+
+INSTALL_CURA="${INSTALL_CURA:-1}"
+INSTALL_ORCA="${INSTALL_ORCA:-1}"
+INSTALL_CREALITY="${INSTALL_CREALITY:-1}"
+CREALITY_VERSION="${CREALITY_VERSION:-v4.3.8}"
+CREALITY_BUILD="${CREALITY_BUILD:-6991}"
+
+if [ ! -d "/opt/cura" ] && [ "${INSTALL_CURA}" -eq 1 ]; then
+  echo "**** install cura from appimage ****" && \
+  if [ -z ${CURA_VERSION+x} ]; then \
+    CURA_VERSION=$(curl -sX GET "https://api.github.com/repos/Ultimaker/Cura/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
+  fi && \
+  cd /tmp && \
+  curl -o \
+    /tmp/cura.app -L \
+    "https://github.com/Ultimaker/Cura/releases/download/${CURA_VERSION}/UltiMaker-Cura-${CURA_VERSION}-linux-X64.AppImage" && \
+  chmod +x /tmp/cura.app && \
+  ./cura.app --appimage-extract && \
+  mv squashfs-root /opt/cura && \
+  sed -i 's/QT_QPA_PLATFORMTHEME=xdgdesktopportal/QT_QPA_PLATFORMTHEME=gtk3/' /opt/cura/AppRun.env && \
+  rm -rf /tmp/cura
+fi
+
+if [ ! -d "/opt/orca" ] && [ "${INSTALL_ORCA}" -eq 1 ]; then
+  echo "**** install oracaslicer from appimage ****" && \
+  if [ -z ${ORCASLICER_VERSION+x} ]; then \
+    ORCASLICER_VERSION=$(curl -sX GET "https://api.github.com/repos/SoftFever/OrcaSlicer/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
+  fi && \
+  cd /tmp && \
+  curl -o \
+    /tmp/orca.app -L \
+    "https://github.com/SoftFever/OrcaSlicer/releases/download/${ORCASLICER_VERSION}/OrcaSlicer_Linux_$(echo ${ORCASLICER_VERSION} | sed 's/\b\(.\)/\u\1/g').AppImage" && \
+  chmod +x /tmp/orca.app && \
+  ./orca.app --appimage-extract && \
+  mv squashfs-root /opt/orcaslicer && \
+  rm -rf /tmp/orca
+fi
+
+if [ ! -d "/opt/crealityprint" ] && [ "${INSTALL_CREALITY}" -eq 1 ]; then
+  echo "**** install crealityprint from appimage ****" && \
+  cd /tmp && \
+  curl -o \
+    /tmp/crealityprint.app -L \
+    "https://github.com/CrealityOfficial/CrealityPrint/releases/download/${CREALITY_VERSION}/Creality_Print-${CREALITY_VERSION}.${CREALITY_BUILD}-x86_64-Release.AppImage" && \
+  chmod +x /tmp/crealityprint.app && \
+  ./crealityprint.app --appimage-extract && \
+  mv squashfs-root /opt/crealityprint && \
+  rm -rf /tmp/crealityprint
+fi
