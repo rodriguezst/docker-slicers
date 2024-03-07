@@ -13,7 +13,7 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 
 RUN echo "**** installing nomachine dependencies ****" && \
   apt-get update && apt-get install -y apt-utils vim xterm cups curl \
-  openbox ssh pulseaudio sudo && \
+  openbox ssh pulseaudio sudo dbus-x11 && \
   mkdir -p /var/run/dbus && \
   echo "**** install packages ****" && \
   apt-get update && \
